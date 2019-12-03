@@ -1,0 +1,44 @@
+{
+  "chrome": {
+    "browserName": "chrome",
+    "chromeOptions": {
+      "args": [
+        "--start-maximized",
+        "--disable-extensions",
+        "--safebrowsing-disable-download-protection",
+        "--safebrowsing-disable-extension-blacklist"
+      ],
+      "prefs": {
+        "safebrowsing.enabled": true,
+        "profile.default_content_setting_values.notifications": 2,
+        "profile.default_content_settings.popups": 0,
+        "download.prompt_for_download": false,
+        "download.directory_upgrade": true
+      }
+    }
+  },
+  "chrome-headless": {
+    "browserName": "chrome",
+    "chromeOptions": {
+      "args": [
+        "--disable-gpu",
+        "--headless",
+        "--disable-extensions",
+        "--safebrowsing-disable-download-protection",
+        "--safebrowsing-disable-extension-blacklist"
+      ],
+      "prefs": {
+        "safebrowsing.enabled": true,
+        "profile.default_content_settings.popups": 0,
+        "download.prompt_for_download": false,
+        "download.directory_upgrade": true
+      }
+    }
+  },
+  "firefox": {
+    "browserName": "firefox"
+  },
+  "edge": {
+    "browserName": "MicrosoftEdge"
+  }
+}
