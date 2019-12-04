@@ -1,22 +1,15 @@
 package setup;
 
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.ios.IOSDriver;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
-import org.openqa.grid.internal.utils.configuration.StandaloneConfiguration;
-import org.openqa.grid.selenium.GridLauncherV3;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.server.SeleniumServer;
 import utilities.Tools;
 
 import java.io.File;
@@ -26,7 +19,6 @@ import java.net.URL;
 
 public class Hooks {
   private static Scenario currentScenario;
-  private static boolean isFirstServerRun = false;
   private static boolean reportsCreated = false;
   private static RemoteWebDriver driver;
 
@@ -45,6 +37,7 @@ public class Hooks {
                 }));
   }
 
+  private DriverFactory factory;
   private boolean setup = false;
   private Config config;
   private URL url;
@@ -100,8 +93,9 @@ public class Hooks {
 
       if (driver == null) {
         try {
-          setDriver(createDriver());
-          driver.manage().deleteAllCookies();
+          factory = new DriverFactory(config);
+          setDriver(factory.createDriver());
+          if (Config.getDeviceName().equalsIgnoreCase("Web")) driver.manage().deleteAllCookies();
         } catch (ElementNotInteractableException e) {
           // Ignore exception
         }
@@ -146,44 +140,6 @@ public class Hooks {
       this.capabilities = new DesiredCapabilities(config.getCapabilities());
 
       setup = true;
-    }
-  }
-
-  /** Starts the Standalone Selenium Server if it is ran locally. */
-  private void startStandaloneServer() {
-    boolean firstRunAndNotRemote = !isFirstServerRun && !Config.IS_REMOTE;
-
-    if (firstRunAndNotRemote) {
-      SeleniumServer seleniumServer = new SeleniumServer(new StandaloneConfiguration());
-      boolean isChrome = Config.getDeviceName().equalsIgnoreCase("chrome");
-      boolean isFireFox = Config.getDeviceName().equalsIgnoreCase("firefox");
-
-      if (isChrome) WebDriverManager.chromedriver().setup();
-      else if (isFireFox) WebDriverManager.firefoxdriver().setup();
-
-      if (!seleniumServer.isStarted()) {
-        GridLauncherV3.main(new String[] {});
-        isFirstServerRun = true;
-        if (isChrome) System.setProperty("webdriver.chrome.silentOutput", "true");
-      }
-    }
-  }
-
-  /** Creates the driver with the given capabilities */
-  private RemoteWebDriver createDriver() {
-    String platform = config.getPlatform().toUpperCase();
-
-    switch (platform) {
-      case "ANDROID":
-        return new AndroidDriver<MobileElement>(url, capabilities);
-      case "IOS":
-        return new IOSDriver<MobileElement>(url, capabilities);
-      case "WEB":
-        startStandaloneServer();
-        return new RemoteWebDriver(url, capabilities);
-
-      default:
-        throw new IllegalStateException("Unexpected value: " + platform);
     }
   }
 

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -11,7 +12,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.System.getProperty;
@@ -23,7 +23,7 @@ public class Config {
 
   private static String deviceName;
   private String url;
-  private Map<String, Object> capabilities;
+  private DesiredCapabilities capabilities;
   private boolean isAndroid;
   private boolean isIos;
   private boolean isWeb;
@@ -31,7 +31,7 @@ public class Config {
   private String platform;
 
   public Config() {
-    platform = getProperty("platform", "web");
+    platform = getProperty("platform", "Web");
   }
 
   public static String getDeviceName() {
@@ -53,7 +53,7 @@ public class Config {
   /** sets Web Desired Capabilities */
   private void setWebCapabilities() {
     deviceName = getProperty("deviceName", "chrome");
-    capabilities = getDeviceCapabilities(deviceName);
+    capabilities = new DesiredCapabilities(getDeviceCapabilities(deviceName));
     url = getProperty("seleniumGrid", "http://localhost:4444/wd/hub");
   }
 
@@ -62,24 +62,27 @@ public class Config {
     deviceName = getProperty("deviceName", "iPhone x");
     url = getProperty("seleniumGrid", "http://0.0.0.0:4723/wd/hub");
 
-    capabilities = getDeviceCapabilities(deviceName);
-    capabilities.put("app", Paths.get(WORKSPACE, "apps", "appName").toString());
-    capabilities.put("platformName", "iOS");
-    capabilities.put("automationName", "XCUITest");
-    capabilities.put("xcodeOrgId", getProperty("xcodeSigningId", "iPhone Developer"));
+    capabilities = new DesiredCapabilities();
+    capabilities.setCapability("app", Paths.get(WORKSPACE, "apps", "appName").toString());
+    capabilities.setCapability("platformName", "iOS");
+    capabilities.setCapability("automationName", "XCUITest");
+    capabilities.setCapability("xcodeOrgId", getProperty("xcodeSigningId", "iPhone Developer"));
   }
 
   /** sets Android Desired Capabailities */
   private void setAndroidCapabilities() {
-    deviceName = getProperty("deviceName", "emulator-5554");
+    deviceName = getProperty("deviceName", "AndroidEmu");
     url = getProperty("seleniumGrid", "http://0.0.0.0:4723/wd/hub");
 
-    capabilities = getDeviceCapabilities(deviceName);
-    capabilities.put("app", Paths.get(WORKSPACE, "app").toString());
-    capabilities.put("platformName", "Android");
-    capabilities.put("automationName", "UiAutomator2");
-    capabilities.put("systemPort", parseInt(getProperty("systemPort", "8200")));
-    capabilities.put("autoGrantPermissions", true);
+    capabilities = new DesiredCapabilities();
+
+    capabilities.setCapability("deviceName", getDeviceName());
+    capabilities.setCapability("platformName", "Android");
+    capabilities.setCapability("automationName", "UiAutomator2");
+    capabilities.setCapability(
+        "app", Paths.get(WORKSPACE, "apps", "Walmart_Grocery_v7.4.0_apkpure.com.apk").toString());
+    capabilities.setCapability("systemPort", parseInt(getProperty("systemPort", "8200")));
+    capabilities.setCapability("autoGrantPermissions", true);
   }
 
   /**
@@ -103,7 +106,7 @@ public class Config {
   }
 
   // <editor-fold desc="Get and Sets">
-  public Map<String, Object> getCapabilities() {
+  public DesiredCapabilities getCapabilities() {
     return capabilities;
   }
 
