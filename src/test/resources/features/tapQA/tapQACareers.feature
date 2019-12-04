@@ -1,7 +1,6 @@
 @tapQA
-Feature: tapQA Home
+Feature: TapQA Careers
 
-  @ValidationSmoke
   Scenario: Validate Job Listings
     Given the User navigates to the tapQA home page
     And navigates to the tapQA Careers page

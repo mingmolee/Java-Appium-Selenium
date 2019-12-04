@@ -1,0 +1,79 @@
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/junit/junit
+    implementation group: 'junit', name: 'junit', version: '4.12'
+
+    // https://mvnrepository.com/artifact/de.monochromata.cucumber/reporting-plugin
+    implementation group: 'de.monochromata.cucumber', name: 'reporting-plugin', version: '3.0.7'
+
+    // https://mvnrepository.com/artifact/io.cucumber/cucumber-jvm
+    implementation group: 'io.cucumber', name: 'cucumber-jvm', version: '4.7.4', ext: 'pom'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.8'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2
+    implementation group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.7.0'
+
+    // https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
+    implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '3.7.1'
+
+    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-server
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-server', version: '4.0.0-alpha-1'
+
+    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.13.2'
+
+    // https://mvnrepository.com/artifact/io.cucumber/cucumber-picocontainer
+    testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '4.7.4'
+
+    // needed for run time on tests but is included within cucumber-jvm
+    testImplementation 'io.cucumber:cucumber-java:4.7.4'
+    testImplementation 'io.cucumber:cucumber-junit:4.7.4'
+}
+
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Cucumber tasks and variables to set tag expressions and env before running //
+////////////////////////////////////////////////////////////////////////////////
+def cucumberOptions = ['-p', 'pretty',
+                       '--add-plugin', 'de.monochromata.cucumber.report.PrettyReports:TestResults/Reports/cucumber-html',
+                       '-p', 'json:TestResults/Reports/cucumber-report.json',
+                       '-g', 'gradle.cucumber',
+                       '-g', 'setup',
+                       '-g', 'test.steps',
+                       'src/test/resources',]
+
+def cucumberTagExpression = ['-t', '@Help']
+
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            systemProperty "cucumber.options", System.properties.getProperty("cucumber.options")
+            systemProperties(System.properties as Map<String, ?>)
+            cucumberOptions.addAll(cucumberTagExpression)
+            args = cucumberOptions
+        }
+    }
+}
