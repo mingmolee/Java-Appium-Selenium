@@ -8,78 +8,23 @@ import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import utilities.Tools;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 public class Hooks {
   private static Scenario currentScenario;
   private static boolean reportsCreated = false;
   private static RemoteWebDriver driver;
 
-  // quits driver
-  static {
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> driver.quit()));
-  }
-
-  // quits driver
-  static {
-    Runtime.getRuntime()
-        .addShutdownHook(
-            new Thread(
-                () -> {
-                  driver.quit();
-                }));
-  }
-
   private DriverFactory factory;
   private boolean setup = false;
   private Config config;
-  private URL url;
-  private DesiredCapabilities capabilities;
 
   public Hooks() {}
-
-  public static void takeScreenshot() {
-    fileScreenshot();
-    embedScreenshot();
-  }
-
-  private static void fileScreenshot() {
-    try {
-      File sourceFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-      String fileName =
-          String.format(
-              "./TestResults/Screenshots/Feature_%s_Line%s_Time[%s].png",
-              currentScenario.getName(), currentScenario.getLine(), Tools.getDate("hh-mm-ss", 0));
-      FileUtils.copyFile(sourceFile, new File(fileName));
-    } catch (WebDriverException | NullPointerException | IOException e) {
-      System.out.println("Failed to take screenshot");
-    }
-  }
-
-  public static void embedScreenshot() {
-    try {
-      final byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-      currentScenario.embed(screenshot, "image/png");
-    } catch (WebDriverException | NullPointerException e) {
-      System.out.println("Failed to take embed Screenshot");
-    }
-  }
-
-  // <editor-fold desc="Gets and Sets">
-  public static RemoteWebDriver getDriver() {
-    return driver;
-  }
-
-  private void setDriver(RemoteWebDriver driver) {
-    Hooks.driver = driver;
-  }
 
   @Before(order = 1)
   public void beforeAll(Scenario scenario) throws MalformedURLException {
@@ -126,6 +71,16 @@ public class Hooks {
     }
   }
 
+  // quits driver
+  static {
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread(
+                () -> {
+                  driver.quit();
+                }));
+  }
+
   /**
    * Sets up environment and capabilities for given properties and data.
    *
@@ -135,9 +90,6 @@ public class Hooks {
   private void setupEnvironment(Scenario scenario) throws MalformedURLException {
     if (!setup) {
       currentScenario = scenario;
-
-      this.url = new URL(config.getUrl());
-      this.capabilities = new DesiredCapabilities(config.getCapabilities());
 
       setup = true;
     }
@@ -160,6 +112,42 @@ public class Hooks {
 
       reportsCreated = true;
     }
+  }
+
+  public static void takeScreenshot() {
+    fileScreenshot();
+    embedScreenshot();
+  }
+
+  private static void fileScreenshot() {
+    try {
+      File sourceFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+      String fileName =
+          String.format(
+              "./TestResults/Screenshots/Feature_%s_Line%s_Time[%s].png",
+              currentScenario.getName(), currentScenario.getLine(), Tools.getDate("hh-mm-ss", 0));
+      FileUtils.copyFile(sourceFile, new File(fileName));
+    } catch (WebDriverException | NullPointerException | IOException e) {
+      System.out.println("Failed to take screenshot");
+    }
+  }
+
+  public static void embedScreenshot() {
+    try {
+      final byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+      currentScenario.embed(screenshot, "image/png");
+    } catch (WebDriverException | NullPointerException e) {
+      System.out.println("Failed to take embed Screenshot");
+    }
+  }
+
+  // <editor-fold desc="Gets and Sets">
+  public static RemoteWebDriver getDriver() {
+    return driver;
+  }
+
+  private void setDriver(RemoteWebDriver driver) {
+    Hooks.driver = driver;
   }
   // </editor-fold>
 }

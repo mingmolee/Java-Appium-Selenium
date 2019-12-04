@@ -51,9 +51,12 @@ public class DriverFactory {
       SeleniumServer seleniumServer = new SeleniumServer(new StandaloneConfiguration());
       boolean isChrome = Config.getDeviceName().equalsIgnoreCase("chrome");
       boolean isFireFox = Config.getDeviceName().equalsIgnoreCase("firefox");
+      boolean isEdge = Config.getDeviceName().equalsIgnoreCase("edge");
 
       if (isChrome) WebDriverManager.chromedriver().setup();
       else if (isFireFox) WebDriverManager.firefoxdriver().setup();
+      else if (isEdge) WebDriverManager.edgedriver().setup();
+      else System.out.printf("Incompatible device name: [%s]%n", Config.getDeviceName());
 
       if (!seleniumServer.isStarted()) {
         GridLauncherV3.main(new String[] {});
