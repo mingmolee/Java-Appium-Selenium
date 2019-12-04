@@ -9,9 +9,11 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
 import static java.lang.System.getProperty;
 
 public class Config {
@@ -22,18 +24,62 @@ public class Config {
   private static String deviceName;
   private String url;
   private Map<String, Object> capabilities;
+  private boolean isAndroid;
+  private boolean isIos;
+  private boolean isWeb;
+  private boolean isMobile;
+  private String platform;
 
-  public Config() {}
+  public Config() {
+    platform = getProperty("platform", "web");
+  }
 
   public static String getDeviceName() {
     return deviceName;
   }
 
+  public void setCapabilitiesForPlatform() {
+    isAndroid = platform.equalsIgnoreCase("Android");
+    isIos = platform.equalsIgnoreCase("iOS");
+    isWeb = platform.equalsIgnoreCase("Web");
+
+    if (isAndroid || isIos) isMobile = true;
+
+    if (isAndroid) setAndroidCapabilities();
+    if (isIos) setIosCapabilities();
+    if (isWeb) setWebCapabilities();
+  }
+
   /** sets Web Desired Capabilities */
-  void setCapabilities() {
+  private void setWebCapabilities() {
     deviceName = getProperty("deviceName", "chrome");
     capabilities = getDeviceCapabilities(deviceName);
     url = getProperty("seleniumGrid", "http://localhost:4444/wd/hub");
+  }
+
+  /** sets iOS Desired Capabilities */
+  private void setIosCapabilities() {
+    deviceName = getProperty("deviceName", "iPhone x");
+    url = getProperty("seleniumGrid", "http://0.0.0.0:4723/wd/hub");
+
+    capabilities = getDeviceCapabilities(deviceName);
+    capabilities.put("app", Paths.get(WORKSPACE, "apps", "appName").toString());
+    capabilities.put("platformName", "iOS");
+    capabilities.put("automationName", "XCUITest");
+    capabilities.put("xcodeOrgId", getProperty("xcodeSigningId", "iPhone Developer"));
+  }
+
+  /** sets Android Desired Capabailities */
+  private void setAndroidCapabilities() {
+    deviceName = getProperty("deviceName", "emulator-5554");
+    url = getProperty("seleniumGrid", "http://0.0.0.0:4723/wd/hub");
+
+    capabilities = getDeviceCapabilities(deviceName);
+    capabilities.put("app", Paths.get(WORKSPACE, "app").toString());
+    capabilities.put("platformName", "Android");
+    capabilities.put("automationName", "UiAutomator2");
+    capabilities.put("systemPort", parseInt(getProperty("systemPort", "8200")));
+    capabilities.put("autoGrantPermissions", true);
   }
 
   /**
@@ -59,6 +105,26 @@ public class Config {
   // <editor-fold desc="Get and Sets">
   public Map<String, Object> getCapabilities() {
     return capabilities;
+  }
+
+  String getPlatform() {
+    return platform;
+  }
+
+  public boolean isAndroid() {
+    return isAndroid;
+  }
+
+  public boolean isIos() {
+    return isIos;
+  }
+
+  public boolean isWeb() {
+    return isWeb;
+  }
+
+  public boolean isMobile() {
+    return isMobile;
   }
 
   public String getUrl() {

@@ -1,5 +1,8 @@
 package setup;
 
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -91,11 +94,18 @@ public class Hooks {
       manageResults();
 
       config = new Config();
-      config.setCapabilities();
+      config.setCapabilitiesForPlatform();
 
       setupEnvironment(scenario);
-      startStandaloneServer();
-      createDriver();
+
+      if (driver == null) {
+        try {
+          setDriver(createDriver());
+          driver.manage().deleteAllCookies();
+        } catch (ElementNotInteractableException e) {
+          // Ignore exception
+        }
+      }
     }
   }
 
@@ -160,14 +170,20 @@ public class Hooks {
   }
 
   /** Creates the driver with the given capabilities */
-  private void createDriver() {
-    if (driver == null) {
-      try {
-        setDriver(new RemoteWebDriver(url, capabilities));
-        driver.manage().deleteAllCookies();
-      } catch (ElementNotInteractableException e) {
-        // Ignore exception
-      }
+  private RemoteWebDriver createDriver() {
+    String platform = config.getPlatform().toUpperCase();
+
+    switch (platform) {
+      case "ANDROID":
+        return new AndroidDriver<MobileElement>(url, capabilities);
+      case "IOS":
+        return new IOSDriver<MobileElement>(url, capabilities);
+      case "WEB":
+        startStandaloneServer();
+        return new RemoteWebDriver(url, capabilities);
+
+      default:
+        throw new IllegalStateException("Unexpected value: " + platform);
     }
   }
 
