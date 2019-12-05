@@ -1,5 +1,6 @@
 package test.pages.base;
 
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -7,6 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import setup.Config;
 import setup.Hooks;
 import utilities.Tools;
 
@@ -24,12 +26,25 @@ public abstract class PageObjectBase {
   public PageObjectBase() {
     this.driver = Hooks.getDriver();
     driver.manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
-    setAjaxDecorator();
+    setDecoratorBasedOnPlatform();
+  }
+
+  private void setDecoratorBasedOnPlatform() {
+    Config config = new Config();
+    driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+    if (config.isWeb()) setAjaxDecorator();
+    else setAppiumDecorator();
   }
 
   private void setAjaxDecorator() {
     AjaxElementLocatorFactory decorator = new AjaxElementLocatorFactory(driver, 1);
     PageFactory.initElements(decorator, this);
+  }
+
+  private void setAppiumDecorator() {
+    AppiumFieldDecorator appiumFieldDecorator =
+        new AppiumFieldDecorator(driver, Duration.ofSeconds(3));
+    PageFactory.initElements(appiumFieldDecorator, this);
   }
 
   /**

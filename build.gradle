@@ -41,6 +41,9 @@ dependencies {
     // https://mvnrepository.com/artifact/io.cucumber/cucumber-picocontainer
     testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '4.7.4'
 
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.29'
+
     // needed for run time on tests but is included within cucumber-jvm
     testImplementation 'io.cucumber:cucumber-java:4.7.4'
     testImplementation 'io.cucumber:cucumber-junit:4.7.4'

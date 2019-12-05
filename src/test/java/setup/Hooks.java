@@ -1,5 +1,6 @@
 package setup;
 
+import data.TestData;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -23,6 +24,8 @@ public class Hooks {
   private DriverFactory factory;
   private boolean setup = false;
   private Config config;
+  private TestData testData;
+  boolean notHelpTask;
 
   public Hooks() {}
 
@@ -50,7 +53,7 @@ public class Hooks {
 
   @After(order = 1)
   public void afterAll(Scenario scenario) {
-    boolean notHelpTask = !scenario.getName().equalsIgnoreCase("Help");
+    notHelpTask = !scenario.getName().equalsIgnoreCase("Help");
 
     try {
       if (notHelpTask) {
@@ -59,15 +62,7 @@ public class Hooks {
         }
       }
     } finally {
-      if (notHelpTask) {
-        setup = false;
-
-        if (driver != null) {
-          driver.manage().deleteAllCookies();
-          driver.executeScript("window.sessionStorage.clear();");
-          driver.executeScript("window.localStorage.clear();");
-        }
-      }
+      closeEnvironment();
     }
   }
 
@@ -85,13 +80,32 @@ public class Hooks {
    * Sets up environment and capabilities for given properties and data.
    *
    * @param scenario instanced use of Scenario to get state of current scenario
-   * @throws MalformedURLException
    */
-  private void setupEnvironment(Scenario scenario) throws MalformedURLException {
+  private void setupEnvironment(Scenario scenario) {
     if (!setup) {
       currentScenario = scenario;
-
+      testData = new TestData(Config.USER);
       setup = true;
+    }
+  }
+
+  /** Ends the Environment */
+  private void closeEnvironment() {
+    switch (Config.getDeviceName().toUpperCase()) {
+      case "ANDROID":
+        factory.startAppiumServer().stop();
+      case "IOS":
+        factory.startAppiumServer().stop();
+      case "WEB":
+        if (notHelpTask) {
+          setup = false;
+
+          if (driver != null) {
+            driver.manage().deleteAllCookies();
+            driver.executeScript("window.sessionStorage.clear();");
+            driver.executeScript("window.localStorage.clear();");
+          }
+        }
     }
   }
 

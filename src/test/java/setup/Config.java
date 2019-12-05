@@ -18,6 +18,10 @@ import static java.lang.System.getProperty;
 
 public class Config {
   public static final String WORKSPACE = getProperty("user.dir");
+  public static String USER = getProperty("user", "user1");
+  public static String USERNAME = getProperty("username", "notSet");
+  public static String PASSWORD = getProperty("password", "notSet");
+  public static String OS = getProperty("os.name").toLowerCase();
 
   public static Boolean IS_REMOTE = Boolean.parseBoolean(getProperty("isRemote", "false"));
 
@@ -29,15 +33,14 @@ public class Config {
   private boolean isWeb;
   private boolean isMobile;
   private String platform;
+  private String appName;
 
   public Config() {
-    platform = getProperty("platform", "Web");
+    platform = getProperty("platform", "Android");
+    appName = getProperty("appName", "notSet");
   }
 
-  public static String getDeviceName() {
-    return deviceName;
-  }
-
+  /** Set Capabilities for the Platform: Android, iOS or Web */
   public void setCapabilitiesForPlatform() {
     isAndroid = platform.equalsIgnoreCase("Android");
     isIos = platform.equalsIgnoreCase("iOS");
@@ -63,7 +66,7 @@ public class Config {
     url = getProperty("seleniumGrid", "http://0.0.0.0:4723/wd/hub");
 
     capabilities = new DesiredCapabilities();
-    capabilities.setCapability("app", Paths.get(WORKSPACE, "apps", "appName").toString());
+    capabilities.setCapability("app", Paths.get(WORKSPACE, "apps", getAppName()).toString());
     capabilities.setCapability("platformName", "iOS");
     capabilities.setCapability("automationName", "XCUITest");
     capabilities.setCapability("xcodeOrgId", getProperty("xcodeSigningId", "iPhone Developer"));
@@ -71,7 +74,7 @@ public class Config {
 
   /** sets Android Desired Capabailities */
   private void setAndroidCapabilities() {
-    deviceName = getProperty("deviceName", "AndroidEmu");
+    deviceName = getProperty("deviceName", "emulator-5554");
     url = getProperty("seleniumGrid", "http://0.0.0.0:4723/wd/hub");
 
     capabilities = new DesiredCapabilities();
@@ -79,8 +82,7 @@ public class Config {
     capabilities.setCapability("deviceName", getDeviceName());
     capabilities.setCapability("platformName", "Android");
     capabilities.setCapability("automationName", "UiAutomator2");
-    capabilities.setCapability(
-        "app", Paths.get(WORKSPACE, "apps", "Walmart_Grocery_v7.4.0_apkpure.com.apk").toString());
+    capabilities.setCapability("app", Paths.get(WORKSPACE, "apps", getAppName()).toString());
     capabilities.setCapability("systemPort", parseInt(getProperty("systemPort", "8200")));
     capabilities.setCapability("autoGrantPermissions", true);
   }
@@ -106,12 +108,9 @@ public class Config {
   }
 
   // <editor-fold desc="Get and Sets">
+
   public DesiredCapabilities getCapabilities() {
     return capabilities;
-  }
-
-  String getPlatform() {
-    return platform;
   }
 
   public boolean isAndroid() {
@@ -132,6 +131,18 @@ public class Config {
 
   public String getUrl() {
     return url;
+  }
+
+  String getPlatform() {
+    return platform;
+  }
+
+  public static String getDeviceName() {
+    return deviceName;
+  }
+
+  public String getAppName() {
+    return appName;
   }
   // </editor-fold>
 }
