@@ -221,15 +221,15 @@ We can also use program arguments to get screenshots or to only run specific tes
     ```
 Note: *iOS sim must have `connect hardware keyboard` off.*
 
-***Gradle Wrapper***
+**Gradle Wrapper**
 \
 Setting system properties will allow Gradle Wrapper to run Scenarios outside of the IDE.
-
-*Note*: change directory to the framework directory before running commands.
+- Open Terminal or Command Prompt or PowerShell
+- Change directory in bash or command to the framework directory before running commands.
       ```
         cd <path to framework directory>
       ```
-- Open Bash or CommandLine and run: `gradlew clean build cucumber -Dcucumber.options="--tags '(@tagsToRun)'" -Dusername="username" -Dpassword="password" -DappName="nameOfApp" -Dplatform="platformToUse"`
+- Format of  gradle wrapper line: `gradlew clean build cucumber -Dcucumber.options="--tags '(@tagsToRun)'" -Dusername="username" -Dpassword="password" -DappName="nameOfApp" -Dplatform="platformToUse"`
 
     - Command Line Example
         ```
@@ -239,7 +239,18 @@ Setting system properties will allow Gradle Wrapper to run Scenarios outside of 
       ```
       ./gradlew clean build cucumber -Dcucumber.options="--tags '(@Android)'" -Dusername="frozen" -Dpassword="password1" -DappName="Disney" -Dplatform="Android"
       ```
-
+    - PowerShell Example
+      ```
+      ./gradlew clean build cucumber `-Dcucumber.options="--tags '(@Android)'" `-Dusername="frozen" `-Dpassword="password1" `-DappName="Disney" `-Dplatform="Android"
+      ```
+Reports and Screenshots
+---
+- Reports and screenshots are created located here for local viewing
+ ```C:\Users\yourUserHere\git-projects\framework\TestResults```
+            - `Reports\cucumber-html` will contain an `overview-features.html` that you can open in a browser
+            
+    - Note: old reports and screenshots will be deleted prior to a new run. Please save the TestResults folder into a separate directory before any new runs.
+            
 **Android CheatSheet**
 ----  
 - To see [adb command options](https://developer.android.com/studio/command-line/adb): `$ adb help`
