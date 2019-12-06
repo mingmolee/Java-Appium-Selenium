@@ -1,6 +1,6 @@
-Java-Cucumber-Appium
+Java-Appium-Selenium
 ======
-UI Test automation skeleton for java-cucumber-appium
+UI Test automation skeleton for mobile and web using Java, Cucumber, Appium and UI Test automation skeleton for mobile and web using Java, Cucumber, Appium and Selenium.
 
 Resources
 ---
