@@ -40,5 +40,21 @@
   },
   "edge": {
     "browserName": "MicrosoftEdge"
+  },
+  "iosPhysicalDeviceNameHERE": {
+    "deviceName": "deviceNameHERE",
+    "platformVersion": "versionHere",
+    "udid": "udidForPhysicalDeviceHere"
+  },
+  "iosSimDeviceNameHERE": {
+    "deviceName": "deviceNameHERE",
+    "platformVersion": "versionHere"
+  },
+  "androidPhysicalDeviceNameHERE": {
+    "deviceName": "deviceNameHERE",
+    "udid": "udidForPhysicalDeviceHere"
+  },
+  "emulator-5554": {
+    "deviceName": "emulator-5554"
   }
 }

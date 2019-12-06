@@ -37,3 +37,7 @@ build/reports/
 build/resources/
 build/test-results/
 build/tmp/
+
+# App Files
+.ipa
+.apk
