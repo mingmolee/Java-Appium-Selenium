@@ -68,37 +68,9 @@ Environment variables
 **We will use npm to install needed packages:**
 [install _current_ Node.js](https://nodejs.org/en/)
 
-#### Mac OSX:
-**1a.** If the machine does not have a .bash_profile, open a terminal and proceed with the following: 
-`$ touch ~./bash_profile`
-
-**1b.** Open the bash profile:
-`$ open ~/.bash_profile
-`
-
-
-**2.** Set environment variables
-```
-export ANDROID_HOME=/path/to/your/android/sdk
-export ANDROID_SDK_ROOT=$ANDROID_HOME
-export JAVA_HOME=$(/usr/libexec/java_home)
-export PATH=${PATH}:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HOME/bin
-```
-\
-**3.** Save changes, reopen terminal and enter the following.
-- **Homebrew**: 
-`$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-    - After installation: `$ brew doctor` should state `Your system is ready to brew`
-- **Node**:`$ brew install node`
-- **Git**:`$ brew install git`
-- **libimobiledevice - iOS**:`$ brew install libimobiledevice`
-- **carthage - iOS**:`$ brew install carthage`
-- **ios-deploy - iOS**:`$ npm install -g ios-deploy`
-    - ios-deploy should be global.
-    
 #### Windows OS:
-NOTE: Unable to run iOS on windows\
-
+NOTE: Unable to run iOS on Windows
+\
 **Input command lines into powershell**\
 _restart pc if npm is not found_
 * `npm install npm@latest -g`
@@ -126,8 +98,35 @@ Variable path -> path\to\androidSDK
  ```
 %ANDROID_HOME%\emulator
 %ANDROID_HOME%\tools
-%ANDROID_HOME%\platform-tools
+%ANDROID_HOME%\platform--tagsools
 ```
+#### Mac OSX:
+**1a.** If the machine does not have a .bash_profile, open a terminal and proceed with the following: 
+`$ touch ~./bash_profile`
+
+**1b.** Open the bash profile:
+`$ open ~/.bash_profile
+`
+
+
+**2.** Set environment variables
+```
+export ANDROID_HOME=/path/to/your/android/sdk
+export ANDROID_SDK_ROOT=$ANDROID_HOME
+export JAVA_HOME=$(/usr/libexec/java_home)
+export PATH=${PATH}:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform--tagsools:$JAVA_HOME/bin
+```
+\
+**3.** Save changes, reopen terminal and enter the following.
+- **Homebrew**: 
+`$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+    - After installation: `$ brew doctor` should state `Your system is ready to brew`
+- **Node**:`$ brew install node`
+- **Git**:`$ brew install git`
+- **libimobiledevice - iOS**:`$ brew install libimobiledevice`
+- **carthage - iOS**:`$ brew install carthage`
+- **ios-deploy - iOS**:`$ npm install -g ios-deploy`
+    - ios-deploy should be global.
     
 Usage:
 ---
@@ -218,9 +217,28 @@ Create a run configuration. This will allow you to run Scenarios by right clicki
 We can also use program arguments to get screenshots or to only run specific tests  
 - Example
     ```
-     --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvm4SMFormatter --plugin html:target/cucumber-report/cucumber.html --monochrome --tags @TagsYouWantToRun
+     --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvm4SMFormatter --plugin html:target/cucumber-report/cucumber.html --monochrome ---tagsags @TagsYouWantToRun
     ```
 Note: *iOS sim must have `connect hardware keyboard` off.*
+
+***Gradle Wrapper***
+\
+Setting system properties will allow Gradle Wrapper to run Scenarios outside of the IDE.
+
+*Note*: change directory to the framework directory before running commands.
+      ```
+        cd <path to framework directory>
+      ```
+- Open Bash or CommandLine and run: `gradlew clean build cucumber -Dcucumber.options="--tags '(@tagsToRun)'" -Dusername="username" -Dpassword="password" -DappName="nameOfApp" -Dplatform="platformToUse"`
+
+    - Command Line Example
+        ```
+        gradlew clean build cucumber -Dcucumber.options="--tags '(@Android)'" -Dusername="frozen" -Dpassword="password1" -DappName="Disney" -Dplatform="Android"
+        ```
+    - Bash Example
+      ```
+      ./gradlew clean build cucumber -Dcucumber.options="--tags '(@Android)'" -Dusername="frozen" -Dpassword="password1" -DappName="Disney" -Dplatform="Android"
+      ```
 
 **Android CheatSheet**
 ----  
