@@ -2,12 +2,12 @@ package test.steps.android;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import test.pages.android.examplePageAndroid;
+import test.pages.android.exampleAndroidPage;
 
-public class exampleStepsAndroid {
-  private examplePageAndroid page;
+public class exampleAndroidSteps {
+  private exampleAndroidPage page;
 
-  public exampleStepsAndroid(examplePageAndroid page) {
+  public exampleAndroidSteps(exampleAndroidPage page) {
     this.page = page;
   }
 

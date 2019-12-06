@@ -5,9 +5,9 @@ import org.openqa.selenium.support.FindBy;
 import setup.Config;
 import test.pages.base.PageObjectBase;
 
-public class examplePageAndroid extends PageObjectBase {
+public class exampleAndroidPage extends PageObjectBase {
 
-  public examplePageAndroid() {}
+  public exampleAndroidPage() {}
 
   @FindBy(xpath = "//android.widget.Button[@text='SIGN IN']")
   private AndroidElement signInButton;

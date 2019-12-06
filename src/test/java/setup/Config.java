@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import io.appium.java_client.remote.AutomationName;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.BufferedReader;
@@ -62,13 +63,13 @@ public class Config {
 
   /** sets iOS Desired Capabilities */
   private void setIosCapabilities() {
-    deviceName = getProperty("deviceName", "iPhone x");
+    deviceName = getProperty("deviceName", "iPhone 11");
     url = getProperty("seleniumGrid", "http://0.0.0.0:4723/wd/hub");
 
     capabilities = new DesiredCapabilities();
     capabilities.setCapability("app", Paths.get(WORKSPACE, "apps", getAppName()).toString());
     capabilities.setCapability("platformName", "iOS");
-    capabilities.setCapability("automationName", "XCUITest");
+    capabilities.setCapability("automationName", AutomationName.IOS_XCUI_TEST);
     capabilities.setCapability("xcodeOrgId", getProperty("xcodeSigningId", "iPhone Developer"));
   }
 
