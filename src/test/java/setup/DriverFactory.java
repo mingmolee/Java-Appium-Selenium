@@ -118,8 +118,8 @@ public class DriverFactory {
   /** Start Android Emulator */
   private void startAndroidEmulation() {
 
-    boolean isWindows = Config.OS.equalsIgnoreCase("windows");
-    String scriptsPath = Paths.get(WORKSPACE, "src", "resources", "scripts").toString();
+    boolean isWindows = Config.OS.contains("windows");
+    String scriptsPath = Paths.get(WORKSPACE, "src", "test", "resources", "scripts").toString();
 
     try {
       if (isWindows) {
