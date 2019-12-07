@@ -98,7 +98,7 @@ Variable path -> path\to\androidSDK
  ```
 %ANDROID_HOME%\emulator
 %ANDROID_HOME%\tools
-%ANDROID_HOME%\platform--tagsools
+%ANDROID_HOME%\platform--tools
 ```
 #### Mac OSX:
 **1a.** If the machine does not have a .bash_profile, open a terminal and proceed with the following: 
@@ -114,7 +114,7 @@ Variable path -> path\to\androidSDK
 export ANDROID_HOME=/path/to/your/android/sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 export JAVA_HOME=$(/usr/libexec/java_home)
-export PATH=${PATH}:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform--tagsools:$JAVA_HOME/bin
+export PATH=${PATH}:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$JAVA_HOME/bin
 ```
 \
 **3.** Save changes, reopen terminal and enter the following.
@@ -217,7 +217,7 @@ Create a run configuration. This will allow you to run Scenarios by right clicki
 We can also use program arguments to get screenshots or to only run specific tests  
 - Example
     ```
-     --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvm4SMFormatter --plugin html:target/cucumber-report/cucumber.html --monochrome ---tagsags @TagsYouWantToRun
+     --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvm4SMFormatter --plugin html:target/cucumber-report/cucumber.html --monochrome --tags @TagsYouWantToRun
     ```
 Note: *iOS sim must have `connect hardware keyboard` off.*
 
