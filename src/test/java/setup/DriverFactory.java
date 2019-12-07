@@ -125,8 +125,7 @@ public class DriverFactory {
       if (isWindows) {
         Runtime.getRuntime().exec(Paths.get(scriptsPath, "startAndroidEmulator.bat").toString());
       } else {
-        Runtime.getRuntime().exec("cd $ANDROID_HOME/emulator");
-        Runtime.getRuntime().exec("emulator -avd emulator-5554");
+        Runtime.getRuntime().exec(Paths.get(scriptsPath, "startAndroidEmulator.sh").toString());
       }
     } catch (IOException e) {
       e.printStackTrace();
