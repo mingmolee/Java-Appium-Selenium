@@ -102,7 +102,7 @@ Variable path -> path\to\androidSDK
 ```
 #### Mac OSX:
 **1a.** If the machine does not have a .bash_profile, open a terminal and proceed with the following: 
-`$ touch ~./bash_profile`
+`$ touch ~/.bash_profile`
 
 **1b.** Open the bash profile:
 `$ open ~/.bash_profile
