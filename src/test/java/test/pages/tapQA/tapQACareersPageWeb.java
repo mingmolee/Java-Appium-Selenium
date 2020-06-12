@@ -30,4 +30,8 @@ public class tapQACareersPageWeb extends PageObjectBase {
     jsClick(careersNavButton);
     trait();
   }
+
+  public void clickMe() {
+    jumpToJobListingsButton.click();
+  }
 }
